@@ -4,15 +4,11 @@ const noterouter = express.Router();
 
 noterouter.get("/", async (req, res) => {
   try {
-    Note.find((err, data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send(err);
-      }
+    Note.find({ userId: req.header("user-id") }).then((data) => {
+      res.send(data);
     });
   } catch (err) {
-    res.status(409).send("Unable to create user");
+    res.status(409).send("Unable to get notes");
   }
 });
 noterouter.post("/create", async (req, res) => {
@@ -27,7 +23,7 @@ noterouter.post("/create", async (req, res) => {
       res.send(mynote);
     });
   } catch (err) {
-    res.status(409).send("Unable to create user");
+    res.status(409).send("Unable to create note");
   }
 });
 noterouter.get("/:id", async (req, res) => {
